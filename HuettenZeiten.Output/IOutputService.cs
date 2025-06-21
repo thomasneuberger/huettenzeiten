@@ -4,5 +4,5 @@ namespace HuettenZeiten.Output;
 
 public interface IOutputService
 {
-    Task Output(Hut hut, IReadOnlyList<HutUsage> usages);
+    Task Output(IReadOnlyList<Tour> tours, IDictionary<int, IReadOnlyList<HutUsage>> usages);
 }

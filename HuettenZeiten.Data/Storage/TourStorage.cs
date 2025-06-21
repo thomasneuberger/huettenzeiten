@@ -1,0 +1,55 @@
+using HuettenZeiten.Data.Models;
+
+namespace HuettenZeiten.Data.Storage;
+
+public class TourStorage : ITourStorage
+{
+    // Path to the tours.json file in the user's AppData/HuettenZeiten directory
+    private readonly string _filePath = Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+        "HuettenZeiten",
+        "tours.json");
+
+    /// <summary>
+    /// Loads all tours from the tours.json file. Returns an empty list if the file does not exist or is invalid.
+    /// </summary>
+    /// <returns>A read-only list of Tour objects.</returns>
+    public IReadOnlyList<Tour> LoadTours()
+    {
+        if (!File.Exists(_filePath))
+        {
+            return Array.Empty<Tour>();
+        }
+
+        var json = File.ReadAllText(_filePath);
+        return System.Text.Json.JsonSerializer.Deserialize<IReadOnlyList<Tour>>(json) ?? Array.Empty<Tour>();
+    }
+
+    /// <summary>
+    /// Saves a tour to the tours.json file. If a tour with the same Id exists, it is replaced at the same position to keep order.
+    /// Otherwise, the new tour is added to the end of the list.
+    /// </summary>
+    /// <param name="tour">The Tour object to save.</param>
+    public void SaveTour(Tour tour)
+    {
+        var tours = LoadTours().ToList();
+
+        // Find the index of the existing tour (by Id)
+        var index = tours.FindIndex(t => t.Id == tour.Id);
+
+        if (index >= 0)
+        {
+            // Replace at the same position to keep order
+            tours[index] = tour;
+        }
+        else
+        {
+            // Add new tour if not found
+            tours.Add(tour);
+        }
+
+        var json = System.Text.Json.JsonSerializer.Serialize(tours);
+        Directory.CreateDirectory(Path.GetDirectoryName(_filePath) ?? string.Empty);
+        File.WriteAllText(_filePath, json);
+    }
+}

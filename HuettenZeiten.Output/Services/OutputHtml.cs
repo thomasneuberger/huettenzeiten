@@ -8,15 +8,17 @@ public class OutputHtml : IOutputService
     private readonly DateOnly _from = DateOnly.FromDateTime(DateTime.Today.AddDays(1));
     private readonly DateOnly _until = new DateOnly(DateTime.Now.Year, 12, 31);
 
-    public async Task Output(Hut hut, IReadOnlyList<HutUsage> usages)
+    public async Task Output(IReadOnlyList<Tour> tours, IDictionary<int, IReadOnlyList<HutUsage>> usages)
     {
         var html = new StringBuilder();
         html.AppendLine("<html>");
         html.AppendLine("<body>");
-        html.AppendLine("<table>");
-        OutputTableHeader(html);
-        OutputHut(hut, usages, html);
-        html.AppendLine("</table>");
+        
+        foreach (var tour in tours)
+        {
+            OutputTour(tour, usages, html);
+        }
+
         html.AppendLine("</body>");
         html.AppendLine("</html>");
 
@@ -25,6 +27,25 @@ public class OutputHtml : IOutputService
         await File.WriteAllTextAsync(file, content);
 
         Console.WriteLine($"Html file written to {file}");
+    }
+
+    private void OutputTour(Tour tour, IDictionary<int, IReadOnlyList<HutUsage>> usages, StringBuilder html)
+    {
+        html.AppendLine("<h2>").Append(tour.Name).AppendLine("</h2>");
+        html.AppendLine("<table>");
+        OutputTableHeader(html);
+        foreach (var hut in tour.Huts)
+        {
+            if (usages.TryGetValue(hut.Id, out var hutUsages))
+            {
+                OutputHut(hut, hutUsages, html);
+            }
+            else
+            {
+                html.AppendLine("<tr><td colspan='100%'>Keine Daten für diese Hütte verfügbar</td></tr>");
+            }
+        }
+        html.AppendLine("</table>");
     }
 
     private void OutputTableHeader(StringBuilder html)

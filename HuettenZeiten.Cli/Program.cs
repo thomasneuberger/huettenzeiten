@@ -1,26 +1,40 @@
 ﻿using HuettenZeiten.Data;
 using HuettenZeiten.Data.Models;
 using HuettenZeiten.Data.Services;
+using HuettenZeiten.Data.Storage;
 using HuettenZeiten.Output;
 using HuettenZeiten.Output.Services;
 
-var hut = new Hut { Id = 219, Name = "Simony-Hütte" };
+ITourStorage tourStorage = new TourStorage();
+
+var tours = tourStorage.LoadTours();
+
+if (tours.Count == 0)
+{
+    tours = [
+        new(){
+            Id = 1,
+            Name = "Standard",
+            Huts = [
+                new Hut { Id = 219, Name = "Simony-Hütte" }
+            ]
+        }
+    ];
+}
 
 IHutService hutService = new HutReservation();
 
-var usages = await hutService.GetUsages(hut);
+// Dictionary to store usages for each hut by hut id
+var hutUsages = new Dictionary<int, IReadOnlyList<HutUsage>>();
 
-foreach (var usage in usages)
+foreach (var tour in tours)
 {
-    if (usage.IsOpen)
+    foreach (var hut in tour.Huts)
     {
-        Console.WriteLine($"{usage.Date}: {usage.FreeBeds} free beds");
-    }
-    else
-    {
-        Console.WriteLine($"{usage.Date}: closed");
+        IReadOnlyList<HutUsage> usages = await hutService.GetUsages(hut);
+        hutUsages[hut.Id] = usages;
     }
 }
 
 IOutputService output = new OutputHtml();
-await output.Output(hut, usages);
+await output.Output(tours, hutUsages);
