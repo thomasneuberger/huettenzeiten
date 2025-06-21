@@ -5,8 +5,8 @@ namespace HuettenZeiten.Output.Services;
 
 public class OutputHtml : IOutputService
 {
-    private readonly DateOnly _from = DateOnly.FromDateTime(DateTime.Today.AddDays(1));
-    private readonly DateOnly _until = new DateOnly(DateTime.Now.Year, 12, 31);
+    private readonly DateOnly _from = DateOnly.FromDateTime(DateTime.Today);
+    private readonly DateOnly _until = DateOnly.FromDateTime(DateTime.Today.AddYears(1));
 
     public async Task Output(IReadOnlyList<Tour> tours, IDictionary<int, IReadOnlyList<HutUsage>> usages)
     {
