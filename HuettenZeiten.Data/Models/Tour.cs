@@ -6,5 +6,5 @@ public class Tour
 
     public required string Name { get; set; }
 
-    public required IReadOnlyList<Hut> Huts { get; set; }
+    public required IList<Hut> Huts { get; set; }
 }

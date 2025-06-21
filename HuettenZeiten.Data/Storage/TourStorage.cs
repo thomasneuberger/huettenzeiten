@@ -1,3 +1,4 @@
+using System.Text.Json;
 using HuettenZeiten.Data.Models;
 
 namespace HuettenZeiten.Data.Storage;
@@ -14,15 +15,15 @@ public class TourStorage : ITourStorage
     /// Loads all tours from the tours.json file. Returns an empty list if the file does not exist or is invalid.
     /// </summary>
     /// <returns>A read-only list of Tour objects.</returns>
-    public IReadOnlyList<Tour> LoadTours()
+    public async Task<IReadOnlyList<Tour>> LoadTours()
     {
         if (!File.Exists(_filePath))
         {
             return Array.Empty<Tour>();
         }
 
-        var json = File.ReadAllText(_filePath);
-        return System.Text.Json.JsonSerializer.Deserialize<IReadOnlyList<Tour>>(json) ?? Array.Empty<Tour>();
+        var json = await File.ReadAllTextAsync(_filePath);
+        return JsonSerializer.Deserialize(json, HutReservationJsonContext.Default.TourArray) ?? Array.Empty<Tour>();
     }
 
     /// <summary>
@@ -30,9 +31,9 @@ public class TourStorage : ITourStorage
     /// Otherwise, the new tour is added to the end of the list.
     /// </summary>
     /// <param name="tour">The Tour object to save.</param>
-    public void SaveTour(Tour tour)
+    public async Task SaveTour(Tour tour)
     {
-        var tours = LoadTours().ToList();
+        var tours = (await LoadTours()).ToList();
 
         // Find the index of the existing tour (by Id)
         var index = tours.FindIndex(t => t.Id == tour.Id);
@@ -48,8 +49,8 @@ public class TourStorage : ITourStorage
             tours.Add(tour);
         }
 
-        var json = System.Text.Json.JsonSerializer.Serialize(tours);
+        var json = JsonSerializer.Serialize(tours.ToArray(), HutReservationJsonContext.Default.TourArray);
         Directory.CreateDirectory(Path.GetDirectoryName(_filePath) ?? string.Empty);
-        File.WriteAllText(_filePath, json);
+        await File.WriteAllTextAsync(_filePath, json);
     }
 }

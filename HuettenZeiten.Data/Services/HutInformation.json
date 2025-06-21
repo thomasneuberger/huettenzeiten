@@ -1,0 +1,157 @@
+{
+    "hutWebsite": "https://www.adamek.at",
+    "hutId": 491,
+    "tenantCode": "OEAV",
+    "hutUnlocked": true,
+    "maxNumberOfNights": 20,
+    "hutName": "Adamek-Hütte",
+    "hutWarden": "Scherr Martin Berg&Skiführer",
+    "phone": "+43 664 5473481",
+    "coordinates": "47.492209,13.583920",
+    "altitude": "2196 m",
+    "totalBedsInfo": "89",
+    "tenantCountry": "AT",
+    "picture": {
+        "fileType": "HUT_PICTURE",
+        "blobPath": "https://www.hut-reservation.org/data/files/hut_picture_491.jpg",
+        "fileName": "picture_491.jpg",
+        "fileData": null
+    },
+    "hutLanguages": [
+        "DE_DE",
+        "FR",
+        "IT",
+        "EN"
+    ],
+    "hutBedCategories": [
+        {
+            "index": 1,
+            "categoryID": 1862,
+            "rooms": [],
+            "isVisible": true,
+            "totalSleepingPlaces": 50,
+            "reservationMode": "ROOM",
+            "hutBedCategoryLanguageData": [
+                {
+                    "language": "DE_DE",
+                    "label": "Matratzenlager",
+                    "shortLabel": "ML",
+                    "description": "Plätze im 18er, 15er, 8er und 6er Lager vorhanden. Die Zuteilung erfolgt durch den Hüttenwirt. Decken und Polster sind vorhanden. Die Verwendung eines Hüttenschlafsacks ist Pflicht!"
+                },
+                {
+                    "language": "FR",
+                    "label": "dortoirs",
+                    "shortLabel": "dort",
+                    "description": "Des places sont disponibles dans les camps de 18, 15, 8 et 6 personnes. L'attribution se fait uniquement par le gérant du refuge. Des couvertures et des coussins sont disponibles. L'utilisation d'un sac de couchage est obligatoire !"
+                },
+                {
+                    "language": "IT",
+                    "label": "dormitorio",
+                    "shortLabel": "dorm",
+                    "description": "Sono disponibili posti nei campi da 18, 15, 8 e 6 persone. L'assegnazione viene effettuata esclusivamente dal guardiano del rifugio. Sono disponibili coperte e cuscini. È obbligatorio l'uso del sacco a pelo del rifugio!"
+                },
+                {
+                    "language": "EN",
+                    "label": "Dormitory",
+                    "shortLabel": "DORM",
+                    "description": "Places are available in the 18, 15, 8 and 6 person camps. Allocation is made by the hut warden only. Blankets and pillows are available. The use of a hut sleeping bag is mandatory!"
+                }
+            ],
+            "isLinkedToReservation": false,
+            "tenantBedCategoryId": 4
+        },
+        {
+            "index": 2,
+            "categoryID": 1863,
+            "rooms": [],
+            "isVisible": true,
+            "totalSleepingPlaces": 16,
+            "reservationMode": "ROOM",
+            "hutBedCategoryLanguageData": [
+                {
+                    "language": "DE_DE",
+                    "label": "Mehrbettzimmer",
+                    "shortLabel": "MBZ",
+                    "description": "4er Zimmer verfügen über 2 Stockbetten. Bei Bedarf müßen die Plätze mit anderen Gästen geteilt werden. Decken und Polster sind vorhanden. Die Verwendung eines Hüttenschlafsacks ist Pflicht!"
+                },
+                {
+                    "language": "FR",
+                    "label": "chambres",
+                    "shortLabel": "cham",
+                    "description": "Les chambres à 4 lits disposent de 2 lits superposés. Si nécessaire, les places doivent être partagées avec d'autres hôtes. Des couvertures et des coussins sont disponibles. L'utilisation d'un sac de couchage de cabane est obligatoire !"
+                },
+                {
+                    "language": "IT",
+                    "label": "camera a più letti",
+                    "shortLabel": "Lett",
+                    "description": "Le camere con 4 letti dispongono di 2 letti a castello. Se necessario, i letti devono essere condivisi con altri ospiti. Vengono fornite coperte e cuscini. È obbligatorio l'uso del sacco a pelo!"
+                },
+                {
+                    "language": "EN",
+                    "label": "Shared bedroom",
+                    "shortLabel": "SB",
+                    "description": "Rooms with 4 beds have 2 bunk beds. If necessary, the beds must be shared with other guests. Blankets and pillows are provided. The use of a sleeping bag is mandatory!"
+                }
+            ],
+            "isLinkedToReservation": false,
+            "tenantBedCategoryId": 5
+        },
+        {
+            "index": 3,
+            "categoryID": 1864,
+            "rooms": [],
+            "isVisible": true,
+            "totalSleepingPlaces": 6,
+            "reservationMode": "ROOM",
+            "hutBedCategoryLanguageData": [
+                {
+                    "language": "DE_DE",
+                    "label": "Zweierzimmer",
+                    "shortLabel": "2BZ",
+                    "description": "2er Zimmer verfügen über ein Stockbett. Decken und Polster sind vorhanden. Die Verwendung eines Hüttenschlafsacks ist Pflicht!"
+                },
+                {
+                    "language": "FR",
+                    "label": "chambre double",
+                    "shortLabel": "doub",
+                    "description": "Les chambres à 2 lits disposent d'un lit superposé. Des couvertures et des coussins sont disponibles. L'utilisation d'un sac de couchage de cabane est obligatoire !"
+                },
+                {
+                    "language": "IT",
+                    "label": "camera doppia",
+                    "shortLabel": "dopp",
+                    "description": "Le camere per 2 persone hanno un letto a castello. Vengono fornite coperte e cuscini. È obbligatorio l'uso del sacco a pelo!"
+                },
+                {
+                    "language": "EN",
+                    "label": "Double room",
+                    "shortLabel": "DR",
+                    "description": "Rooms for 2 have a bunk bed. Blankets and pillows are provided. The use of a sleeping bag is mandatory!"
+                }
+            ],
+            "isLinkedToReservation": false,
+            "tenantBedCategoryId": 6
+        }
+    ],
+    "providerName": "NO_EPAYMENT",
+    "hutGeneralDescriptions": [
+        {
+            "description": "2 Tage vor Anreise ist keine Online Buchung mehr möglich -  bitte Hütte telefonisch kontaktieren. Nur Barzahlung!!!\r\nÜbernachtungen mit Ihrem Hund sind nicht möglich! Veganes Essen oder Essen für verschiedene Unverträglichkeiten ist nur als Hauptgang möglich (kein 3-Gang-Halbpensionsmenü ). Bitte informieren Sie uns vorab im Feld Gästekommentare.",
+            "language": "DE_DE"
+        },
+        {
+            "description": "Online booking is no longer possible 2 days before arrival - please contact the hut by phone. Cash payment only!!! The calendar shows the available seats by category. Select the desired date to make your reservation. Overnight stays with your dog are not possible! Vegan food or food for various intolerances is only possible as a main course (a 3-course half-board menu is not possible). Please inform us in advance in the guest comments field.",
+            "language": "EN"
+        },
+        {
+            "description": "2 jours avant l&#39;arrivée, il n&#39;est plus possible de réserver en ligne - veuillez contacter le refuge par téléphone. Paiement en espèces uniquement ! Le calendrier indique les places disponibles par catégorie. Sélectionnez la date souhaitée pour effectuer votre réservation. Les nuitées avec votre chien ne sont pas possibles ! Les repas végétaliens ou les repas pour diverses intolérances ne sont possibles qu&#39;en plat principal (un menu demi-pension à 3 plats n&#39;est pas possible). Veuillez nous en informer au préalable dans le champ Commentaires des hôtes.",
+            "language": "FR"
+        },
+        {
+            "description": "La prenotazione online non è più possibile 2 giorni prima dell&#39;arrivo - si prega di contattare il rifugio per telefono. Pagamento solo in contanti! Il calendario mostra i posti disponibili per categoria. Selezionare la data desiderata per effettuare la prenotazione. Non è possibile pernottare con il cane! Il cibo vegano o per intolleranze varie è possibile solo come piatto principale (non è possibile un menu di mezza pensione di 3 portate). Vi preghiamo di informarci in anticipo nel campo dei commenti degli ospiti.",
+            "language": "IT"
+        }
+    ],
+    "supportLink": null,
+    "waitingListEnabled": false
+}

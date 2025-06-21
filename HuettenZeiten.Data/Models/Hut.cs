@@ -1,4 +1,6 @@
-﻿namespace HuettenZeiten.Data.Models;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace HuettenZeiten.Data.Models;
 
 public class Hut
 {
