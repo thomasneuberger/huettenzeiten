@@ -39,9 +39,6 @@ public class HutReservation : IHutService
             var usages = JsonSerializer.Deserialize(json, HutReservationJsonContext.Default.HutReservationUsageArray)!
                 .ToArray();
 
-            var hutStates = usages.Select(usages => usages.HutStatus).Distinct();
-            Console.WriteLine($"HutStatuses: {string.Join(", ", hutStates)}");
-
             return usages
                 .Select(u => u.ToHutUsage())
                 .ToArray();

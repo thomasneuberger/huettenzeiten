@@ -4,25 +4,25 @@ namespace HuettenZeiten.Data.Services;
 
 internal class HutReservationUsage
 {
-    public IDictionary<int, int> FreeBedsPerCategory { get; init; }
-    public int? FreeBeds { get; init; }
-    public Status HutStatus { get; init; }
-    public string Date { get; init; }
-    public string DateFormatted { get; init; }
-    public int TotalSleepingPlaces { get; init; }
-    public string Percentage { get; init; }
+    public IDictionary<int, int> FreeBedsPerCategory { get; init; } = new Dictionary<int, int>();
 
-    internal enum Status
-    {
-        SERVICED,
-        CLOSED
-    }
+    public int? FreeBeds { get; init; }
+
+    public string HutStatus { get; init; } = "UNKNOWN";
+
+    public required string Date { get; init; }
+
+    public required string DateFormatted { get; init; }
+
+    public int TotalSleepingPlaces { get; init; }
+
+    public required string Percentage { get; init; }
 
     internal HutUsage ToHutUsage()
     {
         return new HutUsage
         {
-            IsOpen = HutStatus == Status.SERVICED,
+            IsOpen = HutStatus == "SERVICED",
             Date = DateOnly.FromDateTime(DateTime.Parse(Date)),
             FreeBeds = FreeBeds ?? 0
         };
