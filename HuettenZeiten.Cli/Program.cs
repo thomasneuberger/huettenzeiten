@@ -43,26 +43,28 @@ if (tours.Count == 0)
     ];
 }
 
-var action = Prompt.Select<MainActions>("Was möchtest du tun?");
-logger.LogInformation("User selected action: {Action}", action);
-switch (action)
+while (true)
 {
-    case MainActions.ManageTours:
-        await ManageTours(tours, tourStorage, loggerFactory);
-        break;
-    case MainActions.ManageHuts:
-        await ManageHuts(tours, tourStorage, loggerFactory);
-        break;
-    case MainActions.OutputUsages:
-        await OutputUsages(tours, loggerFactory);
-        break;
-    case MainActions.Quit:
-        logger.LogInformation("Application exiting");
-        return;
-    default:
-        Console.WriteLine("Unbekannte Aktion.");
-        logger.LogWarning("Unknown action selected");
-        return;
+    var action = Prompt.Select<MainActions>("Was möchtest du tun?");
+    logger.LogInformation("User selected action: {Action}", action);
+    switch (action)
+    {
+        case MainActions.ManageTours:
+            await ManageTours(tours, tourStorage, loggerFactory);
+            // Reload tours after management to reflect any changes
+            tours = await tourStorage.LoadTours();
+            break;
+        case MainActions.OutputUsages:
+            await OutputUsages(tours, loggerFactory);
+            break;
+        case MainActions.Quit:
+            logger.LogInformation("Application exiting");
+            return;
+        default:
+            Console.WriteLine("Unbekannte Aktion.");
+            logger.LogWarning("Unknown action selected");
+            break;
+    }
 }
 
 async Task ManageTours(IReadOnlyList<Tour> tours, ITourStorage tourStorage, ILoggerFactory loggerFactory)
@@ -188,24 +190,6 @@ async Task ManageTours(IReadOnlyList<Tour> tours, ITourStorage tourStorage, ILog
                 continue;
         }
     }
-}
-
-async Task ManageHuts(IReadOnlyList<Tour> tours, ITourStorage tourStorage, ILoggerFactory loggerFactory)
-{
-    logger.LogInformation("Entered ManageHuts mode");
-
-    if (tours.Count == 0)
-    {
-        Console.WriteLine("Keine Touren vorhanden. Bitte erstelle zuerst eine Tour über 'Touren verwalten'.");
-        logger.LogInformation("No tours available");
-        return;
-    }
-
-    var selectedTour = tours.Count == 1
-        ? tours[0]
-        : SelectTour(tours);
-
-    await ManageHutsForTour(selectedTour, tourStorage, loggerFactory);
 }
 
 async Task ManageHutsForTour(Tour selectedTour, ITourStorage tourStorage, ILoggerFactory loggerFactory)
