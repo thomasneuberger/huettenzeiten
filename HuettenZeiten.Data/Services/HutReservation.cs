@@ -8,6 +8,8 @@ namespace HuettenZeiten.Data.Services;
 public class HutReservation : IHutService
 {
     private readonly ILogger<HutReservation> _logger;
+    private const int MaxRetries = 3;
+    private const int InitialDelayMs = 1000;
 
     public HutReservation(ILogger<HutReservation> logger)
     {
@@ -16,15 +18,13 @@ public class HutReservation : IHutService
 
     public async Task<string?> GetHutName(int hutId)
     {
-        const int maxRetries = 3;
-        const int initialDelayMs = 1000;
+        using var httpClient = new HttpClient();
 
-        for (int attempt = 0; attempt <= maxRetries; attempt++)
+        for (int attempt = 0; attempt <= MaxRetries; attempt++)
         {
             try
             {
-                _logger.LogDebug("Fetching hut name for hutId: {HutId} - Attempt {Attempt}/{MaxAttempts}", hutId, attempt + 1, maxRetries + 1);
-                using var httpClient = new HttpClient();
+                _logger.LogDebug("Fetching hut name for hutId: {HutId} - Attempt {Attempt}/{MaxAttempts}", hutId, attempt + 1, MaxRetries + 1);
                 var json = await httpClient.GetStringAsync($"https://www.hut-reservation.org/api/v1/reservation/hutInfo/{hutId}");
 
                 var hutInfo = JsonSerializer.Deserialize(json, HutReservationJsonContext.Default.HutInformation)!;
@@ -32,10 +32,10 @@ public class HutReservation : IHutService
                 _logger.LogInformation("Successfully retrieved hut name '{HutName}' for hutId: {HutId}", hutInfo.HutName, hutId);
                 return hutInfo.HutName;
             }
-            catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Forbidden && attempt < maxRetries)
+            catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Forbidden && attempt < MaxRetries)
             {
-                var delayMs = initialDelayMs * (int)Math.Pow(2, attempt);
-                _logger.LogWarning(ex, "Transient HTTP 403 error when retrieving hut name for hutId: {HutId}. Retrying in {DelayMs}ms (Attempt {Attempt}/{MaxRetries})", hutId, delayMs, attempt + 1, maxRetries);
+                var delayMs = InitialDelayMs * (int)Math.Pow(2, attempt);
+                _logger.LogWarning(ex, "Transient HTTP 403 error when retrieving hut name for hutId: {HutId}. Retrying in {DelayMs}ms (Attempt {Attempt}/{MaxRetries})", hutId, delayMs, attempt + 1, MaxRetries);
                 await Task.Delay(delayMs);
             }
             catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.BadRequest)
@@ -66,15 +66,13 @@ public class HutReservation : IHutService
 
     public async Task<IReadOnlyList<HutUsage>> GetUsages(Hut hut)
     {
-        const int maxRetries = 3;
-        const int initialDelayMs = 1000;
+        using var httpClient = new HttpClient();
 
-        for (int attempt = 0; attempt <= maxRetries; attempt++)
+        for (int attempt = 0; attempt <= MaxRetries; attempt++)
         {
             try
             {
-                _logger.LogDebug("Fetching usage data for hut '{HutName}' (ID: {HutId}) - Attempt {Attempt}/{MaxAttempts}", hut.Name, hut.Id, attempt + 1, maxRetries + 1);
-                using var httpClient = new HttpClient();
+                _logger.LogDebug("Fetching usage data for hut '{HutName}' (ID: {HutId}) - Attempt {Attempt}/{MaxAttempts}", hut.Name, hut.Id, attempt + 1, MaxRetries + 1);
                 var json = await httpClient.GetStringAsync($"https://www.hut-reservation.org/api/v1/reservation/getHutAvailability?hutId={hut.Id}&step=WIZARD");
 
                 var usages = JsonSerializer.Deserialize(json, HutReservationJsonContext.Default.HutReservationUsageArray)!
@@ -87,10 +85,10 @@ public class HutReservation : IHutService
                 _logger.LogInformation("Successfully retrieved {UsageCount} usage entries for hut '{HutName}' (ID: {HutId})", hutUsages.Length, hut.Name, hut.Id);
                 return hutUsages;
             }
-            catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Forbidden && attempt < maxRetries)
+            catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Forbidden && attempt < MaxRetries)
             {
-                var delayMs = initialDelayMs * (int)Math.Pow(2, attempt);
-                _logger.LogWarning(ex, "Transient HTTP 403 error when retrieving usage data for hut '{HutName}' (ID: {HutId}). Retrying in {DelayMs}ms (Attempt {Attempt}/{MaxRetries})", hut.Name, hut.Id, delayMs, attempt + 1, maxRetries);
+                var delayMs = InitialDelayMs * (int)Math.Pow(2, attempt);
+                _logger.LogWarning(ex, "Transient HTTP 403 error when retrieving usage data for hut '{HutName}' (ID: {HutId}). Retrying in {DelayMs}ms (Attempt {Attempt}/{MaxRetries})", hut.Name, hut.Id, delayMs, attempt + 1, MaxRetries);
                 await Task.Delay(delayMs);
             }
             catch (HttpRequestException ex)
