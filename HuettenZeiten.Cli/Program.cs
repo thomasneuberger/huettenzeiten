@@ -98,7 +98,9 @@ async Task ManageTours(IReadOnlyList<Tour> tours, ITourStorage tourStorage, ILog
                     continue;
                 }
 
-                var newTourId = mutableTours.Count > 0 ? mutableTours.Max(t => t.Id) + 1 : 1;
+                // Load all persisted tours to ensure we get the correct next ID
+                var allPersistedTours = await tourStorage.LoadTours();
+                var newTourId = allPersistedTours.Count > 0 ? allPersistedTours.Max(t => t.Id) + 1 : 1;
                 var newTour = new Tour
                 {
                     Id = newTourId,
