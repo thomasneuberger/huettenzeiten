@@ -37,7 +37,6 @@ public class FileLogger : ILogger
         {
             try
             {
-                Directory.CreateDirectory(Path.GetDirectoryName(_logFilePath) ?? string.Empty);
                 File.AppendAllText(_logFilePath, logEntry + Environment.NewLine);
             }
             catch

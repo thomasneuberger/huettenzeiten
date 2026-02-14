@@ -48,10 +48,10 @@ logger.LogInformation("User selected action: {Action}", action);
 switch (action)
 {
     case MainActions.ManageHuts:
-        await ManageHuts(tours, tourStorage);
+        await ManageHuts(tours, tourStorage, loggerFactory);
         break;
     case MainActions.OutputUsages:
-        await OutputUsages(tours);
+        await OutputUsages(tours, loggerFactory);
         break;
     case MainActions.Quit:
         logger.LogInformation("Application exiting");
@@ -62,9 +62,11 @@ switch (action)
         return;
 }
 
-async Task ManageHuts(IReadOnlyList<Tour> tours, ITourStorage tourStorage)
+async Task ManageHuts(IReadOnlyList<Tour> tours, ITourStorage tourStorage, ILoggerFactory loggerFactory)
 {
     logger.LogInformation("Entered ManageHuts mode");
+    var hutReservation = new HutReservation(loggerFactory.CreateLogger<HutReservation>());
+
     var selectedTour = tours.Count == 1
         ? tours[0]
         : SelectTour(tours);
@@ -86,7 +88,7 @@ async Task ManageHuts(IReadOnlyList<Tour> tours, ITourStorage tourStorage)
                     continue;
                 }
 
-                var hutName = await new HutReservation(loggerFactory.CreateLogger<HutReservation>()).GetHutName(hutId);
+                var hutName = await hutReservation.GetHutName(hutId);
                 if (string.IsNullOrWhiteSpace(hutName))
                 {
                     logger.LogWarning("Could not retrieve hut name for ID {HutId}", hutId);
@@ -144,16 +146,8 @@ Tour SelectTour(IReadOnlyList<Tour> tours)
     return selectedTour;
 }
 
-static async Task OutputUsages(IReadOnlyList<Tour> tours)
+static async Task OutputUsages(IReadOnlyList<Tour> tours, ILoggerFactory loggerFactory)
 {
-    var loggerFactory = LoggerFactory.Create(builder =>
-    {
-        builder.AddProvider(new FileLoggerProvider(Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "HuettenZeiten",
-            "app.log")));
-        builder.SetMinimumLevel(LogLevel.Information);
-    });
     var logger = loggerFactory.CreateLogger("OutputUsages");
 
     logger.LogInformation("Starting to retrieve usages for {TourCount} tours", tours.Count);
@@ -176,7 +170,8 @@ static async Task OutputUsages(IReadOnlyList<Tour> tours)
             catch (Exception ex)
             {
                 logger.LogError(ex, "Error fetching usages for hut '{HutName}' (ID: {HutId})", hut.Name, hut.Id);
-                throw;
+                Console.Error.WriteLine($"Fehler beim Abrufen der Daten für Hütte '{hut.Name}' (ID: {hut.Id}). Die Hütte wird übersprungen.");
+                hutUsages[hut.Id] = Array.Empty<HutUsage>();
             }
         }
     }

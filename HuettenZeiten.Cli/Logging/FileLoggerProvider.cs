@@ -9,6 +9,13 @@ public class FileLoggerProvider : ILoggerProvider
     public FileLoggerProvider(string logFilePath)
     {
         _logFilePath = logFilePath;
+
+        // Ensure the directory exists once during initialization
+        var directory = Path.GetDirectoryName(logFilePath);
+        if (!string.IsNullOrEmpty(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
     }
 
     public ILogger CreateLogger(string categoryName)
