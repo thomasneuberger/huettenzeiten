@@ -8,7 +8,7 @@ namespace HuettenZeiten.Data.Services;
 public class HutReservation : IHutService
 {
     private readonly ILogger<HutReservation> _logger;
-    private const int MaxRetries = 3;
+    private const int MaxRetries = 5;
     private const int InitialDelayMs = 1000;
 
     public HutReservation(ILogger<HutReservation> logger)
@@ -36,6 +36,7 @@ public class HutReservation : IHutService
             {
                 var delayMs = InitialDelayMs * (int)Math.Pow(2, attempt);
                 _logger.LogWarning(ex, "Transient HTTP 403 error when retrieving hut name for hutId: {HutId}. Retrying in {DelayMs}ms (Attempt {Attempt}/{MaxRetries})", hutId, delayMs, attempt + 1, MaxRetries);
+                Console.WriteLine($"HTTP 403 Fehler beim Abrufen des Hüttennamens. Wiederhole in {delayMs}ms (Versuch {attempt + 1}/{MaxRetries})...");
                 await Task.Delay(delayMs);
             }
             catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.BadRequest)
@@ -89,6 +90,7 @@ public class HutReservation : IHutService
             {
                 var delayMs = InitialDelayMs * (int)Math.Pow(2, attempt);
                 _logger.LogWarning(ex, "Transient HTTP 403 error when retrieving usage data for hut '{HutName}' (ID: {HutId}). Retrying in {DelayMs}ms (Attempt {Attempt}/{MaxRetries})", hut.Name, hut.Id, delayMs, attempt + 1, MaxRetries);
+                Console.WriteLine($"HTTP 403 Fehler beim Abrufen der Nutzungsdaten für '{hut.Name}'. Wiederhole in {delayMs}ms (Versuch {attempt + 1}/{MaxRetries})...");
                 await Task.Delay(delayMs);
             }
             catch (HttpRequestException ex)
