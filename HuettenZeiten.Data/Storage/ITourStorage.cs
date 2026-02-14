@@ -18,5 +18,11 @@ namespace HuettenZeiten.Data.Storage
         /// </summary>
         /// <param name="tour">The Tour object to save.</param>
         Task SaveTour(Tour tour);
+
+        /// <summary>
+        /// Deletes a tour from the storage.
+        /// </summary>
+        /// <param name="tourId">The ID of the tour to delete.</param>
+        Task DeleteTour(int tourId);
     }
 }
