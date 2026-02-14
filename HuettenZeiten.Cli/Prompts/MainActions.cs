@@ -4,8 +4,8 @@ namespace HuettenZeiten.Data.Prompts;
 
 public enum MainActions
 {
-    [Display(Name = "Hütten bearbeiten")]
-    ManageHuts,
+    [Display(Name = "Touren verwalten")]
+    ManageTours,
 
     [Display(Name = "Auslastung anzeigen")]
     OutputUsages,

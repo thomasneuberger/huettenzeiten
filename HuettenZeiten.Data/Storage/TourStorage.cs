@@ -53,4 +53,18 @@ public class TourStorage : ITourStorage
         Directory.CreateDirectory(Path.GetDirectoryName(_filePath) ?? string.Empty);
         await File.WriteAllTextAsync(_filePath, json);
     }
+
+    /// <summary>
+    /// Deletes a tour from the tours.json file.
+    /// </summary>
+    /// <param name="tourId">The ID of the tour to delete.</param>
+    public async Task DeleteTour(int tourId)
+    {
+        var tours = (await LoadTours()).ToList();
+        tours.RemoveAll(t => t.Id == tourId);
+
+        var json = JsonSerializer.Serialize(tours.ToArray(), HutReservationJsonContext.Default.TourArray);
+        Directory.CreateDirectory(Path.GetDirectoryName(_filePath) ?? string.Empty);
+        await File.WriteAllTextAsync(_filePath, json);
+    }
 }
