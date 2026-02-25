@@ -96,20 +96,17 @@ public class HutReservation : IHutService
             catch (HttpRequestException ex)
             {
                 _logger.LogError(ex, "HTTP request failed when retrieving usage data for hut '{HutName}' (ID: {HutId}). Status Code: {StatusCode}", hut.Name, hut.Id, ex.StatusCode);
-                Console.Error.WriteLine($"Fehler beim Abrufen der Nutzungsdaten für die Hütte '{hut.Name}'.");
-                return Array.Empty<HutUsage>();
+                throw;
             }
             catch (JsonException ex)
             {
                 _logger.LogError(ex, "JSON deserialization failed when processing usage data for hut '{HutName}' (ID: {HutId})", hut.Name, hut.Id);
-                Console.Error.WriteLine($"Fehler beim Deserialisieren der Nutzungsdaten für die Hütte '{hut.Name}': {ex.Message}");
-                return Array.Empty<HutUsage>();
+                throw;
             }
         }
 
         // If we reach here, all retries have been exhausted
         _logger.LogError("All retry attempts exhausted when retrieving usage data for hut '{HutName}' (ID: {HutId})", hut.Name, hut.Id);
-        Console.Error.WriteLine($"Fehler beim Abrufen der Nutzungsdaten für die Hütte '{hut.Name}'. Alle Wiederholungsversuche fehlgeschlagen.");
-        return Array.Empty<HutUsage>();
+        throw new HttpRequestException($"Alle Wiederholungsversuche für Hütte '{hut.Name}' (ID: {hut.Id}) fehlgeschlagen.");
     }
 }

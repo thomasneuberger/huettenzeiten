@@ -8,7 +8,7 @@ public class OutputHtml : IOutputService
     private readonly DateOnly _from = DateOnly.FromDateTime(DateTime.Today);
     private readonly DateOnly _until = DateOnly.FromDateTime(DateTime.Today.AddYears(1));
 
-    public async Task Output(IReadOnlyList<Tour> tours, IDictionary<int, IReadOnlyList<HutUsage>> usages)
+    public async Task Output(IReadOnlyList<Tour> tours, IDictionary<int, IReadOnlyList<HutUsage>> usages, IDictionary<int, string> errors)
     {
         var html = new StringBuilder();
         html.AppendLine("<html>");
@@ -16,7 +16,7 @@ public class OutputHtml : IOutputService
         
         foreach (var tour in tours)
         {
-            OutputTour(tour, usages, html);
+            OutputTour(tour, usages, errors, html);
         }
 
         html.AppendLine("</body>");
@@ -29,14 +29,21 @@ public class OutputHtml : IOutputService
         Console.WriteLine($"Html file written to {file}");
     }
 
-    private void OutputTour(Tour tour, IDictionary<int, IReadOnlyList<HutUsage>> usages, StringBuilder html)
+    private void OutputTour(Tour tour, IDictionary<int, IReadOnlyList<HutUsage>> usages, IDictionary<int, string> errors, StringBuilder html)
     {
         html.AppendLine("<h2>").Append(tour.Name).AppendLine("</h2>");
         html.AppendLine("<table>");
         OutputTableHeader(html);
         foreach (var hut in tour.Huts)
         {
-            if (usages.TryGetValue(hut.Id, out var hutUsages))
+            if (errors.TryGetValue(hut.Id, out var errorMessage))
+            {
+                html.AppendLine("<tr>");
+                html.Append("<td>").Append(hut.Name).AppendLine("</td>");
+                html.Append("<td colspan='100%'>").Append(errorMessage).AppendLine("</td>");
+                html.AppendLine("</tr>");
+            }
+            else if (usages.TryGetValue(hut.Id, out var hutUsages))
             {
                 OutputHut(hut, hutUsages, html);
             }

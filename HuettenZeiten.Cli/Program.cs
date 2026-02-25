@@ -281,6 +281,7 @@ static async Task OutputUsages(IReadOnlyList<Tour> tours, ILoggerFactory loggerF
 
     // Dictionary to store usages for each hut by hut id
     var hutUsages = new Dictionary<int, IReadOnlyList<HutUsage>>();
+    var hutErrors = new Dictionary<int, string>();
 
     foreach (var tour in tours)
     {
@@ -296,15 +297,16 @@ static async Task OutputUsages(IReadOnlyList<Tour> tours, ILoggerFactory loggerF
             catch (Exception ex)
             {
                 logger.LogError(ex, "Error fetching usages for hut '{HutName}' (ID: {HutId})", hut.Name, hut.Id);
-                Console.Error.WriteLine($"Fehler beim Abrufen der Daten für Hütte '{hut.Name}' (ID: {hut.Id}). Die Hütte wird übersprungen.");
-                hutUsages[hut.Id] = Array.Empty<HutUsage>();
+                var errorMessage = $"Fehler beim Abrufen der Daten für Hütte '{hut.Name}' (ID: {hut.Id}).";
+                Console.Error.WriteLine($"{errorMessage} Die Hütte wird übersprungen.");
+                hutErrors[hut.Id] = errorMessage;
             }
         }
     }
 
     IOutputService output = new OutputHtml();
     logger.LogInformation("Generating output");
-    await output.Output(tours, hutUsages);
+    await output.Output(tours, hutUsages, hutErrors);
     logger.LogInformation("Output generation completed");
 }
 
